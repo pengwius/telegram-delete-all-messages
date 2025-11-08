@@ -2,6 +2,7 @@ import os
 import json
 
 from time import sleep
+from datetime import datetime, timedelta, timezone
 
 from pyrogram import Client
 from pyrogram.raw.functions.messages import Search
@@ -32,8 +33,9 @@ if not os.path.exists(cachePath):
 
 
 class Cleaner:
-    def __init__(self, chats=None, search_chunk_size=100, delete_chunk_size=100):
+    def __init__(self, chats=None, search_chunk_size=100, delete_chunk_size=100, keep_hours=0):
         self.chats = chats or []
+        self.keep_hours = keep_hours
         if search_chunk_size > 100:
             # https://github.com/gurland/telegram-delete-all-messages/issues/31
             #
@@ -94,6 +96,14 @@ class Cleaner:
         groups_str = ', '.join(c.title for c in self.chats)
         print(f'\nSelected {groups_str}.\n')
 
+        keep_str = input('Keep messages from last how many hours? Enter number (e.g. 72). Enter 0 to delete all: ').strip()
+        try:
+            kh = int(keep_str) if keep_str != '' else 0
+        except ValueError:
+            print('Invalid number, defaulting to 0 (delete all).')
+            kh = 0
+        self.keep_hours = max(0, kh)
+
         if recursive == 1:
             self.run()
 
@@ -103,9 +113,25 @@ class Cleaner:
             message_ids = []
             add_offset = 0
 
+            if self.keep_hours and self.keep_hours > 0:
+                cutoff = datetime.now(timezone.utc) - timedelta(hours=self.keep_hours)
+            else:
+                cutoff = None
+
             while True:
                 q = await self.search_messages(chat_id, add_offset)
-                message_ids.extend(msg.id for msg in q)
+                if cutoff:
+                    for msg in q:
+                        msg_date = msg.date
+                        if getattr(msg_date, "tzinfo", None) is None:
+                            msg_date = msg_date.replace(tzinfo=timezone.utc)
+                        else:
+                            msg_date = msg_date.astimezone(timezone.utc)
+                        if msg_date < cutoff:
+                            message_ids.append(msg.id)
+                else:
+                    message_ids.extend(msg.id for msg in q)
+
                 messages_count = len(q)
                 print(f'Found {len(message_ids)} of your messages in "{chat.title}"')
                 if messages_count < self.search_chunk_size:
