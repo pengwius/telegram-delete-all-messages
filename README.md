@@ -103,3 +103,9 @@ To make any changes in our codebase, please do the following:
 6. If everything is OK your contribution gets approved.
 
 Note: it's very important to keep PRs brief and clear. Resolve single issue by a single PR.
+
+## License
+
+This project is distributed under the GNU General Public License v3.0 (GPL-3.0-only). See the included LICENSE file for the full text.
+
+For packaging (nix/nixpkgs) the SPDX identifier used in this repository is: GPL-3.0-only

@@ -34,7 +34,8 @@ EOF
             '';
             meta = {
               description = "Utility to delete all your Telegram messages in selected chats";
-              license = pkgs.lib.licenses.mit;
+              # Project is licensed under GNU GPL v3
+              license = pkgs.lib.licenses.gpl3Only;
             };
           };
         in {
