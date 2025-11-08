@@ -10,7 +10,8 @@ stdenv.mkDerivation {
     mkdir -p $out/lib/telegram-delete-all-messages
     cp -r $src/* $out/lib/telegram-delete-all-messages/
     mkdir -p $out/bin
-    cat > $out/bin/telegram-delete-all-messages <<'EOF'
+    # use an unquoted heredoc so shell variables like $out are expanded
+    cat > $out/bin/telegram-delete-all-messages <<EOF
 #!${pythonEnv}/bin/python3
 import runpy, sys
 runpy.run_path("$out/lib/telegram-delete-all-messages/cleaner.py", run_name="__main__")
