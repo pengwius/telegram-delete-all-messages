@@ -1,6 +1,6 @@
 with import <nixpkgs> {};
 let
-  pythonEnv = python3.withPackages (ps: with ps; [ pyrogram tgcrypto ]);
+  pythonEnv = python3.withPackages (ps: with ps; [ telethon cryptg qrcode ]);
 in
 stdenv.mkDerivation {
   name = "telegram-delete-all-messages";

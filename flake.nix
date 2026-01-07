@@ -14,7 +14,7 @@
       mkFor = system:
         let
           pkgs = import nixpkgs { inherit system; };
-          pythonEnv = pkgs.python3.withPackages (ps: with ps; [ pyrogram tgcrypto ]);
+          pythonEnv = pkgs.python3.withPackages (ps: with ps; [ telethon cryptg qrcode ]);
           src = pkgs.lib.cleanSource ./.;
           package = pkgs.stdenv.mkDerivation {
             pname = "telegram-delete-all-messages";
