@@ -5,3 +5,4 @@ client.session
 client.session-journal
 
 .DS_Store
+.direnv

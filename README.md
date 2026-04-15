@@ -1,6 +1,8 @@
 # telegram-delete-all-messages
 Delete all your messages in supergroups with python script.
 
+This project is based on [@gurland’s project](https://github.com/gurland/telegram-delete-all-messages)
+
 ## Installation
 To install this script you have to download project and install requirements:
 

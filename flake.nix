@@ -41,6 +41,7 @@ EOF
         in {
           package = package;
           pkgs = pkgs;
+          pythonEnv = pythonEnv;
         };
 
       # build attribute sets for packages and apps for each system
@@ -60,9 +61,19 @@ EOF
           };
         };
       }) systems);
+
+      devShells = builtins.listToAttrs (map (s: {
+        name = s;
+        value = {
+          default = (mkFor s).pkgs.mkShell {
+            buildInputs = [ (mkFor s).pythonEnv ];
+          };
+        };
+      }) systems);
     in
     {
       packages = packages;
       apps = apps;
+      devShells = devShells;
     };
 }
